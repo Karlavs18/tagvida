@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 
 // ── CONTRASEÑA SIMPLE ────────────────────────────────────────
 // Cámbiala por la tuya antes de subir
-const ADMIN_PASSWORD = 'tagvida2026'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
 const TABS = ['inicio', 'clientes', 'escaneos', 'suscripciones']
 const TAB_LABELS = { inicio: '🏠 Inicio', clientes: '🐾 Clientes', escaneos: '📍 Escaneos', suscripciones: '💳 Suscripciones' }
