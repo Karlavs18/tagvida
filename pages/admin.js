@@ -486,6 +486,10 @@ export default function AdminPage() {
                   <input style={s.input} value={form.ownerPhone} onChange={e => setForm({...form, ownerPhone:e.target.value})} placeholder="+58 414 123 4567" />
                 </div>
                 <div>
+                  <label style={s.label}>Email</label>
+                  <input style={s.input} type="email" value={form.ownerEmail} onChange={e => setForm({...form, ownerEmail:e.target.value})} placeholder="correo@ejemplo.com" />
+                </div>
+                <div>
                   <label style={s.label}>Plan</label>
                   <select style={s.select} value={form.plan} onChange={e => setForm({...form, plan:e.target.value})}>
                     <option value="basico">Básico</option>
