@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
   if (error || !dije) return res.status(404).json({ error: 'No encontrado' })
 
-  // ✅ FIX: declarar owner correctamente, normalizando array vs objeto
+  // ✅ Declarar owner ANTES de usarlo
   const owner = Array.isArray(dije.owners) ? dije.owners[0] : dije.owners
 
   return res.status(200).json({
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     photo_url:      dije.photo_url,
     emergency_info: dije.emergency_info,
     contact_phone:  dije.contact_phone || owner?.phone,
-    owner_whatsapp: owner?.whatsapp || owner?.phone || null,  // ✅ ahora funciona
+    owner_whatsapp: owner?.whatsapp || owner?.phone || null,
     owner_name:     owner?.name || null,
   })
 }
