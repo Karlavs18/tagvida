@@ -18,6 +18,7 @@ export default async function handler(req, res) {
         owners (name, whatsapp, phone)
       `)
       .eq('id', dije_id)
+      const owner = Array.isArray(dije.owners) ? dije.owners[0] : dije.owners
       .eq('is_active', true)
       .single()
 
