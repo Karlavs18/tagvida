@@ -29,8 +29,8 @@ export default async function handler(req, res) {
     photo_url:     dije.photo_url,
     emergency_info:dije.emergency_info,
     contact_phone: dije.contact_phone || dije.owners?.phone,
-      owner_whatsapp: owner?.whatsapp || owner?.phone || null,
-  owner_name:     owner?.name || null,
+    owner_whatsapp: owner?.whatsapp || owner?.phone || null,
+    owner_name:     owner?.name || null,
 //    owner_name:    dije.owners?.name,
 //    owner_whatsapp:dije.owners?.whatsapp,
   })
