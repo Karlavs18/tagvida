@@ -17,27 +17,24 @@ export default async function handler(req, res) {
       .single()
 
     if (dijeError || !dije) {
-      console.error('Dije no encontrado:', dijeError)
       return res.status(404).json({ error: 'Dije no encontrado' })
     }
 
-    // ✅ FIX #2: normalizar owners (array vs objeto)
     const owner = Array.isArray(dije.owners) ? dije.owners[0] : dije.owners
 
-    // Registrar escaneo
+    // Registrar escaneo en BD
     const { error: scanError } = await supabase
       .from('scans')
       .insert({
         dije_id,
-        lat:            location?.lat    || null,
-        lng:            location?.lng    || null,
+        lat:            location?.lat     || null,
+        lng:            location?.lng     || null,
         address:        location?.address || null,
-        finder_message: finder_message   || null,
-        user_agent:     user_agent       || null,
+        finder_message: finder_message    || null,
+        user_agent:     user_agent        || null,
       })
     if (scanError) console.error('Error guardando scan:', scanError)
 
-    // Enviar WhatsApp al dueño
     const phone = owner?.whatsapp || owner?.phone
     if (phone) {
       const mapsUrl = location?.lat
@@ -53,13 +50,42 @@ export default async function handler(req, res) {
       ]
       if (finder_message) msgParts.push('', `💬 Mensaje: "${finder_message}"`)
 
-      const waMsg    = encodeURIComponent(msgParts.join('\n'))
       const cleanPhone = phone.replace(/\D/g, '')
-      const waApiUrl = `https://wa.me/${cleanPhone}?text=${waMsg}`
+      const twilioMsg  = msgParts.join('\n')
 
+      // Enviar por Twilio WhatsApp
+      const twilioSid   = process.env.TWILIO_ACCOUNT_SID
+      const twilioToken = process.env.TWILIO_AUTH_TOKEN
+      const fromNumber  = process.env.TWILIO_WHATSAPP_FROM  // whatsapp:+14155238886
+
+      const twilioRes = await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Basic ' + Buffer.from(`${twilioSid}:${twilioToken}`).toString('base64'),
+            'Content-Type':  'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            From: fromNumber,
+            To:   `whatsapp:+${cleanPhone}`,
+            Body: twilioMsg,
+          }),
+        }
+      )
+
+      const twilioData = await twilioRes.json()
+      if (twilioData.error_code) {
+        console.error('Twilio error:', twilioData)
+      } else {
+        console.log('WhatsApp enviado:', twilioData.sid)
+      }
+
+      // También devolver URL por si acaso
+      const waMsg = encodeURIComponent(msgParts.join('\n'))
       return res.status(200).json({
         success:      true,
-        whatsapp_url: waApiUrl,
+        whatsapp_url: `https://wa.me/${cleanPhone}?text=${waMsg}`,
         owner_name:   owner.name,
         dije_name:    dije.name,
       })
