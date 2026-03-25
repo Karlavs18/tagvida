@@ -130,9 +130,9 @@ async function triggerNotification(location) {
     const data = await res.json()
     console.log('✅ Respuesta de /api/scan:', data)
 
-    if (data.whatsapp_url) {
-      window.open(data.whatsapp_url, '_blank')
-    }
+    //if (data.whatsapp_url) {
+    //  window.open(data.whatsapp_url, '_blank')
+    //}
 
     if (location) {
       const entry = {
