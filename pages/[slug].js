@@ -114,11 +114,13 @@ export default function ScanPage() {
   }
 
 async function triggerNotification(location) {
+  console.log('🔔 triggerNotification llamada con:', location)
   const payload = {
     dije_id:    dije.id,
     location,
     user_agent: navigator.userAgent,
   }
+  console.log('📤 Enviando a /api/scan:', payload)
   try {
     const res  = await fetch('/api/scan', {
       method:  'POST',
@@ -126,13 +128,12 @@ async function triggerNotification(location) {
       body:    JSON.stringify(payload),
     })
     const data = await res.json()
+    console.log('✅ Respuesta de /api/scan:', data)
 
-    // ✅ NUEVO: abrir WhatsApp automáticamente con la URL que devuelve la API
     if (data.whatsapp_url) {
       window.open(data.whatsapp_url, '_blank')
     }
 
-    // Guardar en historial local
     if (location) {
       const entry = {
         addr:      location.address || `${location.lat}, ${location.lng}`,
@@ -143,8 +144,8 @@ async function triggerNotification(location) {
       setHistory(newH)
       try { localStorage.setItem(`scans_${dije.id}`, JSON.stringify(newH)) } catch(e) {}
     }
-  } catch(e) { 
-    console.error(e) 
+  } catch(e) {
+    console.error('❌ Error en triggerNotification:', e)
   }
   setTimeout(() => setNotified(true), 2000)
 }
