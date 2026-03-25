@@ -113,33 +113,41 @@ export default function ScanPage() {
       .bindPopup(`<b>${dije.name}</b><br>📍 Escaneado aquí`).openPopup()
   }
 
-  async function triggerNotification(location) {
-    const payload = {
-      dije_id:        dije.id,
-      location,
-      user_agent:     navigator.userAgent,
-    }
-    try {
-      const res  = await fetch('/api/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json()
-      // Guardar en historial local
-      if (location) {
-        const entry = {
-          addr:      location.address || `${location.lat}, ${location.lng}`,
-          mapsUrl:   `https://maps.google.com/?q=${location.lat},${location.lng}`,
-          timestamp: new Date().toISOString(),
-        }
-        const newH = [entry, ...history].slice(0, 20)
-        setHistory(newH)
-        try { localStorage.setItem(`scans_${dije.id}`, JSON.stringify(newH)) } catch(e) {}
-      }
-    } catch(e) { console.error(e) }
-    setTimeout(() => setNotified(true), 2000)
+async function triggerNotification(location) {
+  const payload = {
+    dije_id:    dije.id,
+    location,
+    user_agent: navigator.userAgent,
   }
+  try {
+    const res  = await fetch('/api/scan', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    })
+    const data = await res.json()
+
+    // ✅ NUEVO: abrir WhatsApp automáticamente con la URL que devuelve la API
+    if (data.whatsapp_url) {
+      window.open(data.whatsapp_url, '_blank')
+    }
+
+    // Guardar en historial local
+    if (location) {
+      const entry = {
+        addr:      location.address || `${location.lat}, ${location.lng}`,
+        mapsUrl:   `https://maps.google.com/?q=${location.lat},${location.lng}`,
+        timestamp: new Date().toISOString(),
+      }
+      const newH = [entry, ...history].slice(0, 20)
+      setHistory(newH)
+      try { localStorage.setItem(`scans_${dije.id}`, JSON.stringify(newH)) } catch(e) {}
+    }
+  } catch(e) { 
+    console.error(e) 
+  }
+  setTimeout(() => setNotified(true), 2000)
+}
 
   async function sendMessage() {
     if (!msgValue.trim()) return
