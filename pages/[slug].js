@@ -114,39 +114,57 @@ export default function ScanPage() {
   }
 
 async function triggerNotification(location) {
-  console.log('🔔 triggerNotification llamada con:', location)
-  const payload = {
-    dije_id:    dije.id,
-    location,
-    user_agent: navigator.userAgent,
-  }
-  console.log('📤 Enviando a /api/scan:', payload)
+  // 1. Registrar en BD siempre
   try {
-    const res  = await fetch('/api/scan', {
+    await fetch('/api/scan', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
+      body:    JSON.stringify({
+        dije_id:    dije.id,
+        location,
+        user_agent: navigator.userAgent,
+      }),
     })
-    const data = await res.json()
-    console.log('✅ Respuesta de /api/scan:', data)
-
-    //if (data.whatsapp_url) {
-    //  window.open(data.whatsapp_url, '_blank')
-    //}
-
-    if (location) {
-      const entry = {
-        addr:      location.address || `${location.lat}, ${location.lng}`,
-        mapsUrl:   `https://maps.google.com/?q=${location.lat},${location.lng}`,
-        timestamp: new Date().toISOString(),
-      }
-      const newH = [entry, ...history].slice(0, 20)
-      setHistory(newH)
-      try { localStorage.setItem(`scans_${dije.id}`, JSON.stringify(newH)) } catch(e) {}
-    }
   } catch(e) {
-    console.error('❌ Error en triggerNotification:', e)
+    console.error('Error registrando scan:', e)
   }
+
+  // 2. Guardar en historial local
+  if (location) {
+    const entry = {
+      addr:      location.address || `${location.lat}, ${location.lng}`,
+      mapsUrl:   `https://maps.google.com/?q=${location.lat},${location.lng}`,
+      timestamp: new Date().toISOString(),
+    }
+    const newH = [entry, ...history].slice(0, 20)
+    setHistory(newH)
+    try { localStorage.setItem(`scans_${dije.id}`, JSON.stringify(newH)) } catch(e) {}
+  }
+
+  // 3. Abrir WhatsApp automático con ubicación incluida
+  const mapsUrl = location?.lat
+    ? `https://maps.google.com/?q=${location.lat},${location.lng}`
+    : 'sin ubicación'
+
+  const msgParts = [
+    `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
+    '',
+    `📍 Mi ubicación: ${mapsUrl}`,
+    `🏠 Dirección: ${location?.address || 'no disponible'}`,
+    `🕐 ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+    '',
+    '¿Cómo puedo devolverte tu mascota? 🐾',
+  ]
+
+  const phone  = (dije.owner_whatsapp || '').replace(/\D/g, '')
+  const waMsg  = encodeURIComponent(msgParts.join('\n'))
+  const waUrl  = `https://wa.me/${phone}?text=${waMsg}`
+
+  // Pequeño delay para que la página cargue primero
+  setTimeout(() => {
+    window.open(waUrl, '_blank')
+  }, 3000)
+
   setTimeout(() => setNotified(true), 2000)
 }
 
