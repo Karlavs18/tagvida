@@ -168,29 +168,44 @@ async function triggerNotification(location) {
   setTimeout(() => setNotified(true), 2000)
 }
 
-  async function sendMessage() {
-    if (!msgValue.trim()) return
-    setSending(true)
-    const locUrl = userLoc
-      ? `https://maps.google.com/?q=${userLoc.lat},${userLoc.lng}`
-      : 'sin ubicación'
-    const waMsg = encodeURIComponent(
-      `🔔 *Tag Vida — Mensaje sobre ${dije.name}*\n\n` +
-      `💬 "${msgValue}"\n\n📍 ${locUrl}\n🕐 ${new Date().toLocaleString('es-MX')}`
-    )
-    const phone = (dije.owner_whatsapp || '').replace(/\D/g, '')
-    window.open(`https://wa.me/${phone}?text=${waMsg}`, '_blank')
-    // También registrar en BD
-    try {
-      await fetch('/api/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dije_id: dije.id, location: userLoc, finder_message: msgValue }),
-      })
-    } catch(e) {}
-    setSending(false)
-    setMsgSent(true)
-  }
+async function sendMessage() {
+  if (!msgValue.trim()) return
+  setSending(true)
+
+  const mapsUrl = userLoc
+    ? `https://maps.google.com/?q=${userLoc.lat},${userLoc.lng}`
+    : 'sin ubicación'
+
+  const msgParts = [
+    `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
+    '',
+    `📍 Mi ubicación: ${mapsUrl}`,
+    `🏠 Dirección: ${locLabel.replace('📍 ', '') || 'no disponible'}`,
+    `🕐 ${new Date().toLocaleString('es-MX')}`,
+    '',
+    `💬 "${msgValue}"`,
+  ]
+
+  const phone = (dije.owner_whatsapp || '').replace(/\D/g, '')
+  const waMsg = encodeURIComponent(msgParts.join('\n'))
+  window.open(`https://wa.me/${phone}?text=${waMsg}`, '_blank')
+
+  // Registrar en BD
+  try {
+    await fetch('/api/scan', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        dije_id:        dije.id,
+        location:       userLoc,
+        finder_message: msgValue,
+      }),
+    })
+  } catch(e) {}
+
+  setSending(false)
+  setMsgSent(true)
+}
 
   // ── ESTADOS DE UI ──────────────────────────
   if (loading) return (
