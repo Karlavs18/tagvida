@@ -361,7 +361,7 @@ window.open(`https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`, '_blank'
               style={{ marginTop:'.6rem', width:'100%', background: msgSent ? '#F0FDF4' : 'white', border: msgSent ? '2px solid #86EFAC' : '2px solid #FFD4C2', borderRadius:'12px', padding:'.85rem', fontFamily:'Nunito,sans-serif', fontSize:'.88rem', fontWeight:800, color: msgSent ? '#16A34A' : '#FF6B35', cursor: msgSent ? 'default' : 'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:'.5rem' }}
             >
               {msgSent ? '✅ ¡Mensaje enviado!' : sending ? 'Enviando...' : 'Enviar mensaje al dueño →'}
-            </button>
+            </button> 
           </div>
 
           <div style={{ padding:'1rem 1.2rem', borderTop:'1px solid #F3F4F6', textAlign:'center' }}>
