@@ -147,14 +147,14 @@ async function triggerNotification(location) {
     : 'sin ubicación'
 
 const msgParts = [
-  `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
+  `*Tag Vida - Encontre a ${dije.name}!*`,
   '',
-  mapsUrl !== 'sin ubicación' ? mapsUrl : 'sin ubicación',
+  mapsUrl !== 'sin ubicación' ? mapsUrl : 'sin ubicacion',
   '',
-  `🏠 ${location?.address || 'no disponible'}`,
-  `🕐 ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  `Direccion: ${location?.address || 'no disponible'}`,
+  `Hora: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
   '',
-  `¿Cómo puedo devolverte tu mascota? 🐾`,
+  `Como puedo devolverte tu mascota?`,
 ]
 
   const phone  = (dije.owner_whatsapp || '').replace(/\D/g, '')
@@ -178,14 +178,14 @@ async function sendMessage() {
     : 'sin ubicación'
 
 const msgParts = [
-  `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
+  `*Tag Vida - Encontre a ${dije.name}!*`,
   '',
-  mapsUrl !== 'sin ubicación' ? mapsUrl : 'sin ubicación',
+  mapsUrl !== 'sin ubicación' ? mapsUrl : 'sin ubicacion',
   '',
-  `🏠 ${location?.address || 'no disponible'}`,
-  `🕐 ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  `Direccion: ${location?.address || 'no disponible'}`,
+  `Hora: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
   '',
-  `¿Cómo puedo devolverte tu mascota? 🐾`,
+  `Como puedo devolverte tu mascota?`,
 ]
 
   const phone = (dije.owner_whatsapp || '').replace(/\D/g, '')
