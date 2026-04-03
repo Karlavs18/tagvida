@@ -146,15 +146,15 @@ async function triggerNotification(location) {
     ? `https://maps.google.com/?q=${location.lat},${location.lng}`
     : 'sin ubicación'
 
-  const msgParts = [
-    `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
-    '',
-    `📍 Mi ubicación: ${mapsUrl}`,
-    `🏠 Dirección: ${location?.address || 'no disponible'}`,
-    `🕐 ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
-    '',
-    '¿Cómo puedo devolverte tu mascota? 🐾',
-  ]
+const msgParts = [
+  `*Tag Vida -- iEncontré a ${dije.name}!*`,
+  '',
+  `Ubicacion: ${mapsUrl}`,
+  `Direccion: ${location?.address || 'no disponible'}`,
+  `Hora: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  '',
+  `Como puedo devolverte tu mascota?`,
+]
 
   const phone  = (dije.owner_whatsapp || '').replace(/\D/g, '')
 const waMsg = msgParts.join('\n')
@@ -176,15 +176,15 @@ async function sendMessage() {
     ? `https://maps.google.com/?q=${userLoc.lat},${userLoc.lng}`
     : 'sin ubicación'
 
-  const msgParts = [
-    `🔔 *Tag Vida — ¡Encontré a ${dije.name}!*`,
-    '',
-    `📍 Mi ubicación: ${mapsUrl}`,
-    `🏠 Dirección: ${locLabel.replace('📍 ', '') || 'no disponible'}`,
-    `🕐 ${new Date().toLocaleString('es-MX')}`,
-    '',
-    `💬 "${msgValue}"`,
-  ]
+const msgParts = [
+  `*Tag Vida -- iEncontré a ${dije.name}!*`,
+  '',
+  `Ubicacion: ${mapsUrl}`,
+  `Direccion: ${location?.address || 'no disponible'}`,
+  `Hora: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  '',
+  `Como puedo devolverte tu mascota?`,
+]
 
   const phone = (dije.owner_whatsapp || '').replace(/\D/g, '')
 const waMsg = msgParts.join('\n')
