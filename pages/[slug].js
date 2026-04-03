@@ -147,13 +147,14 @@ async function triggerNotification(location) {
     : 'sin ubicación'
 
 const msgParts = [
-  `*Tag Vida -- iEncontré a ${dije.name}!*`,
+  `\uD83D\uDD14 *Tag Vida \u2014 \u00A1Encontr\u00E9 a ${dije.name}!*`,
   '',
-  `Ubicacion: ${mapsUrl}`,
-  `Direccion: ${location?.address || 'no disponible'}`,
-  `Hora: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  mapsUrl !== 'sin ubicación' ? mapsUrl : 'sin ubicaci\u00F3n',
   '',
-  `Como puedo devolverte tu mascota?`,
+  `\uD83C\uDFE0 ${location?.address || 'no disponible'}`,
+  `\uD83D\uDD50 ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}`,
+  '',
+  `\u00BFC\u00F3mo puedo devolverte tu mascota? \uD83D\uDC3E`,
 ]
 
   const phone  = (dije.owner_whatsapp || '').replace(/\D/g, '')
