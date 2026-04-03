@@ -23,6 +23,7 @@ export default async function handler(req, res) {
     const owner = Array.isArray(dije.owners) ? dije.owners[0] : dije.owners
 
     // Registrar escaneo en BD siempre
+    const { dije_id, location, finder_message, user_agent, finder_phone } = req.body
     const { error: scanError } = await supabase
       .from('scans')
       .insert({
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
         address:        location?.address || null,
         finder_message: finder_message    || null,
         user_agent:     user_agent        || null,
+        finder_phone: finder_phone || null,
       })
     if (scanError) console.error('Error guardando scan:', scanError)
 
