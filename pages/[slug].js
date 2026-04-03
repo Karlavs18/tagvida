@@ -157,8 +157,8 @@ async function triggerNotification(location) {
   ]
 
   const phone  = (dije.owner_whatsapp || '').replace(/\D/g, '')
-  const waMsg  = encodeURIComponent(msgParts.join('\n'))
-  const waUrl  = `https://wa.me/${phone}?text=${waMsg}`
+const waMsg = msgParts.join('\n')
+const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`
 
   // Pequeño delay para que la página cargue primero
   setTimeout(() => {
@@ -187,8 +187,8 @@ async function sendMessage() {
   ]
 
   const phone = (dije.owner_whatsapp || '').replace(/\D/g, '')
-  const waMsg = encodeURIComponent(msgParts.join('\n'))
-  window.open(`https://wa.me/${phone}?text=${waMsg}`, '_blank')
+const waMsg = msgParts.join('\n')
+window.open(`https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`, '_blank')
 
   // Registrar en BD
   try {
